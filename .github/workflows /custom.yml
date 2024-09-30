@@ -21,40 +21,30 @@ on:
         type: number
         default: '3'
 
-     lan_wan_map:
-        description: 'LAN/WAN Port Mapping At Boot/Recovery'
-        required: true
-        type: choice
-        options:
-        - 'None'
-        - 'LLLLW'
-        - 'LLLLX'
-        - 'LLLWW'
-        - 'LLLXX'
-
+     
      ephy_up:
         description: 'Enable All Ethernet PHY'
         required: true
         type: boolean
-        default: 'false'
+        default: 'true'
 
      cmdline:
         description: 'U-Boot Command Line'
         required: true
         type: boolean
-        default: 'false'
+        default: 'true'
 
      tftp:
         description: 'TFTP'
         required: true
         type: boolean
-        default: 'false'
+        default: 'true'
 
      netconsole:
         description: 'NetConsole'
         required: true
         type: boolean
-        default: 'false'
+        default: 'true'
 
 jobs:
   build:
@@ -72,10 +62,10 @@ jobs:
       - name: Setup Toolchain
         run: |
           mkdir -p ~/toolchain
-          tar -xf u-boot-mt7621/toolchain/mips-2021.02.tar.xz -C ~/toolchain
-
+          tar -xf toolchain/mips-2012.03.tar.xz -C ~/toolchain
+          
       - name: Base Configuration
-        working-directory: u-boot-mt7621/uboot-5.x.x.x
+        working-directory: uboot-5.x.x.x
         run: make archer_ax23_config
  
       - name: "Apply Configuration"
