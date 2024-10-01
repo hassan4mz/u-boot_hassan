@@ -17,8 +17,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
        fail-fast: false
-
     steps:
+      - name: Setup Toolchain
+        run: |
+          mkdir -p ~/toolchain
+          tar -xvf toolchain/mips-2012.03.tar.xz -C /opt/
+      
       - name: Checkout Sources
         uses: actions/checkout@v4      
       - name: SSH connection to Actions
