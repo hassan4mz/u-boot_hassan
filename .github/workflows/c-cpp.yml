@@ -20,7 +20,7 @@ jobs:
     steps:
       - name: Setup Toolchain
         run: |
-          tar -xvf toolchain/mips-2012.03.tar.xz -C /opt/
+        #  tar -xvf toolchain/mips-2012.03.tar.xz -C /opt/
       
       - name: Checkout Sources
         uses: actions/checkout@v4      
