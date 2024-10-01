@@ -1,23 +1,49 @@
-name: C/C++ CI
+name: build-bin
 
-on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
-
+on: 
+  workflow_dispatch:
+    inputs:
+      revision:
+        description: 'svn revision'
+        required: true
+        default: 'r53879'
+      ssh:
+        description: 'SSH connection to Actions'
+        required: false
+        default: 'true'
 jobs:
   build:
-
+    name: Build u-boot for MT7621
     runs-on: ubuntu-latest
+    strategy:
+       fail-fast: false
 
     steps:
-    - uses: actions/checkout@v4
-    - name: configure
-      run: ./configure
-    - name: make
-      run: make
-    - name: make check
-      run: make check
-    - name: make distcheck
-      run: make distcheck
+      - name: Checkout Sources
+        uses: actions/checkout@v4
+        with:
+          path: u-boot-mt7621
+
+      - name: Setup Toolchain
+        run: |
+          mkdir -p ~/toolchain
+          tar -xf u-boot-mt7621/toolchain/mips-2021.02.tar.xz -C ~/toolchain
+
+      - name: Base Configuration
+        working-directory: u-boot-mt7621/uboot-5.x.x.x
+        run: make archer_ax23_config
+ 
+      - name: "Apply Configuration"
+        working-directory: u-boot-mt7621/uboot-5.x.x.x
+        run: bash configure.sh '${{ inputs.debug_build }}' '${{ inputs.use_mips16 }}' '${{ inputs.boot_delay }}' '${{ inputs.lan_wan_map }}' '${{ inputs.ephy_up }}' '${{ inputs.cmdline }}' '${{ inputs.tftp }}' '${{ inputs.netconsole }}'
+
+      - name: SSH connection to Actions
+        uses: P3TERX/ssh2actions@v1.0.0
+        if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
+        env:
+         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      - uses: actions/upload-artifact@v3
+        with:
+          name: images
+          path: ./*.bin
