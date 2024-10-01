@@ -24,19 +24,7 @@ jobs:
         with:
           path: u-boot-mt7621
 
-      - name: Setup Toolchain
-        run: |
-          mkdir -p ~/toolchain
-          tar -xf u-boot_hassan/toolchain/mips-2021.023.tar.xz -C ~/toolchain
-
-      - name: Base Configuration
-        working-directory: u-boot_hassan/uboot-5.x.x.x
-        run: make archer_ax23_config
- 
-      - name: "Apply Configuration"
-        working-directory: u-boot_hassan/uboot-5.x.x.x
-        run: bash configure.sh '${{ inputs.debug_build }}' '${{ inputs.use_mips16 }}' '${{ inputs.boot_delay }}' '${{ inputs.lan_wan_map }}' '${{ inputs.ephy_up }}' '${{ inputs.cmdline }}' '${{ inputs.tftp }}' '${{ inputs.netconsole }}'
-
+      
       - name: SSH connection to Actions
         uses: P3TERX/ssh2actions@v1.0.0
         if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
