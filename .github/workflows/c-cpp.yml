@@ -27,14 +27,14 @@ jobs:
       - name: Setup Toolchain
         run: |
           mkdir -p ~/toolchain
-          tar -xf u-boot-mt7621/toolchain/mips-2021.02.tar.xz -C ~/toolchain
+          tar -xf toolchain/mips-2021.02.tar.xz -C ~/toolchain
 
       - name: Base Configuration
-        working-directory: u-boot-mt7621/uboot-5.x.x.x
+        working-directory: uboot-5.x.x.x
         run: make archer_ax23_config
  
       - name: "Apply Configuration"
-        working-directory: u-boot-mt7621/uboot-5.x.x.x
+        working-directory: uboot-5.x.x.x
         run: bash configure.sh '${{ inputs.debug_build }}' '${{ inputs.use_mips16 }}' '${{ inputs.boot_delay }}' '${{ inputs.lan_wan_map }}' '${{ inputs.ephy_up }}' '${{ inputs.cmdline }}' '${{ inputs.tftp }}' '${{ inputs.netconsole }}'
 
       - name: SSH connection to Actions
