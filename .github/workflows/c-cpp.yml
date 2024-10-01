@@ -27,7 +27,7 @@ jobs:
       - name: Setup Toolchain
         run: |
           mkdir -p ~/toolchain
-          tar -xf toolchain/mips-2021.02.tar.xz -C ~/toolchain
+          tar -xf toolchain/mips-2021.023.tar.xz -C ~/toolchain
 
       - name: Base Configuration
         working-directory: uboot-5.x.x.x
